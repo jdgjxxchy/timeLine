@@ -7,7 +7,7 @@
         <option :key="name" v-for="(item,name) in all">{{name}}</option>
       </select>
     </div>
-    <label>语音延迟<input type="text" v-model="delay"></label><span>间隔小于语音延迟的不会报时</span><br>
+    <label>语音提前<input type="text" v-model="delay"></label><span>间隔小于语音延迟的不会报时</span><br>
     <span>{{ timing | toInt }}</span><br>
     <el-button type="primary" @click="start()">开始</el-button>
     <button @click="stop()">停止</button>

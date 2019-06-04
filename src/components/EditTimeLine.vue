@@ -18,7 +18,7 @@
     <label><textarea id="timeLine" name="" rows="20" v-model="timeLineStr">
     </textarea></label>
     <br>
-    <button @click="save">保存</button>
+    <button @click="save">保存了</button>
   </div>
 </template>
 
