@@ -139,7 +139,7 @@ export default {
     console.log(t)
     if (!t) {
       t = {
-        '测试': [
+        'testing': [
           {
             timing: 1,
             tip: '测试'
