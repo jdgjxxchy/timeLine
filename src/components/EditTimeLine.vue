@@ -2,30 +2,38 @@
   <div class="root">
     <h1>{{name}}</h1>
     <div id="example-5">
-      <select v-model="name">
-        <option disabled value="">请选择</option>
-        <option>新建时间轴</option>
-        <option :key="name" v-for="(item,name) in all">{{name}}</option>
-      </select>
+      <el-select v-model="name" size="mini">
+        <el-option disabled value="">请选择</el-option>
+        <el-option value="新建时间轴">新建时间轴</el-option>
+        <el-option :key="names" v-for="(item,names) in all" :value="names">{{names}}</el-option>
+      </el-select>
     </div>
-    <el-button @click="start()" type="primary">开始</el-button>
-    <button @click="stop()">停止</button>
+    <el-button @click="start()">开始</el-button>
+    <el-button @click="stop()">停止</el-button>
+    <br>
     <button @click="change(1)">+1</button>
     <button @click="change(0.5)">+0.5</button>
     <button @click="change(-0.5)">-0.5</button>
     <button @click="change(-1)">-1</button>
-    <br><span>{{ timing |  toTimeString }}</span><br>
+    <br><span class="timeNow">{{ timing |  toTimeString }}</span><br>
     <label><textarea id="timeLine" name="" rows="20" v-model="timeLineStr">
     </textarea></label>
     <br>
-    <button @click="save">保存了</button>
+    <button @click="save">保存</button>
+    <button @click="delete1">删除</button>
   </div>
 </template>
 
 <script>
 
+import { Button, Select, Option } from 'element-ui'
 export default {
   name: 'EditTimeLine',
+  components: {
+    elButton: Button,
+    elSelect: Select,
+    elOption: Option
+  },
   data () {
     return {
       timing: 0,
@@ -67,6 +75,14 @@ export default {
         window.localStorage.setItem('timeLine', JSON.stringify(this.all))
       } else {
         alert('名称不能为空')
+      }
+    },
+    delete1 () {
+      if (confirm(`确定删除时间轴 ${this.name} 嘛`)) {
+        delete this.all[this.name]
+        window.localStorage.setItem('timeLine', JSON.stringify(this.all))
+      } else {
+        alert('SB')
       }
     },
     addTime (e) {
@@ -145,5 +161,9 @@ export default {
 </script>
 
 <style scoped>
-
+  .timeNow {
+    color: #66ccff;
+    font-weight: bold;
+    font-size: 30px;
+  }
 </style>

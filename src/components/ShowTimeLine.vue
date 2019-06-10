@@ -1,16 +1,17 @@
 <template>
   <div class="root">
-    <h1>{{name}}</h1>
+<!--    <h1>{{name}}</h1>-->
     <div id="example-5">
-      <select v-model="name">
-        <option disabled value="">请选择</option>
-        <option :key="name" v-for="(item,name) in all">{{name}}</option>
-      </select>
+      <label for=""><el-select v-model="name">
+        <el-option disabled value="请选择">请选择</el-option>
+        <el-option :key="name" v-for="(item,name) in all" :value="name">{{name}}</el-option>
+      </el-select></label>
     </div>
-    <label>语音提前<input type="text" v-model="delay"></label><span>间隔小于语音延迟的不会报时</span><br>
-    <span>{{ timing | toInt }}</span><br>
+    <label>语音提前<el-input type="text" v-model="delay"/></label><br>
+    <span class="timeNow">{{ timing | toTimeString }}</span><br>
     <el-button type="primary" @click="start()">开始</el-button>
-    <button @click="stop()">停止</button>
+    <el-button  @click="stop()">停止</el-button>
+    <br>
     <button @click="change(1)">+1</button>
     <button @click="change(0.5)">+0.5</button>
     <button @click="change(-0.5)">-0.5</button>
@@ -18,10 +19,13 @@
     <div class="timeLine">
       <ul>
         <li :key="item.timing" v-for="(item, index) in realTip">
-          <span class="tips">{{ item.timing | toTimeString( item.tip ) }}</span>
+          <span class="timing">{{ item.timing | toTimeString }}</span>
+          <span class="tips">{{item.tip}}</span>
           <span class="countDown" v-if="index < 2">
+            <!--                  :style="{width: (item.timing-timing)/(item.timing-startTime[index]) * 100 + 'px'}">-->
             <span class="countDownBar"
-                  :style="{width: (item.timing-timing)/(item.timing-startTime[index]) * 100 + 'px'}"></span>
+                  :style="timing | createStyle(item.timing, startTime[index], item.color)">
+            </span>
             <span>{{ item.timing-timing | toInt }}</span>
           </span>
         </li>
@@ -31,8 +35,15 @@
 </template>
 
 <script>
+import { Button, Select, Option, Input } from 'element-ui'
 export default {
   name: 'readTimeLine',
+  components: {
+    elButton: Button,
+    elSelect: Select,
+    elOption: Option,
+    elInput: Input
+  },
   data () {
     return {
       timeLine: [
@@ -117,25 +128,43 @@ export default {
     toInt: function (num) {
       return num.toFixed(1)
     },
-    toTimeString: function (num, tip) {
+    toTimeString: function (num) {
       const secInt = Math.floor(num)
       let minute = Math.floor(secInt / 60).toString().padStart(2, '0')
       let sec = (secInt % 60).toString().padStart(2, '0')
       let mic = ((num - secInt) * 10).toFixed(0).toString()
-      return minute + ':' + sec + '.' + mic + ' ' + tip
+      return minute + ':' + sec + '.' + mic
+    },
+    createStyle: function (t, it, st, color) {
+      return {width: (it - t) / (it - st) * 100 + 'px', background: color}
     }
   },
   watch: {
     name: function (newP, oldP) {
+      let colorList = ['#66ccff', '#ff0000', '#006699', '#99CC33', '#FF9933', '#666699', '#FF9999', '#CCCCFF', '#990033']
+      let colorIndex = 0
+      let colorDic = {}
       this.timeLine = this.all[newP]
       this.reset()
+      this.timeLine.forEach(item => {
+        if (item.tip in colorDic) {
+          item.color = colorDic[item.tip]
+        } else {
+          item.color = colorDic[item.tip] = colorList[colorIndex]
+          colorIndex += 1
+        }
+      })
       console.log(this.timeLine)
+    },
+    delay: function (newD) {
+      window.localStorage.setItem('delay', newD)
     }
   },
   created () {
     this.reset()
     this.speechSU = new window.SpeechSynthesisUtterance()
     let t = window.localStorage.getItem('timeLine')
+    this.delay = window.localStorage.getItem('delay') || 1.5
     console.log(t)
     if (!t) {
       t = {
@@ -174,11 +203,26 @@ export default {
   .countDownBar {
     display: inline-block;
     width: 100px;
-    background: #66ccff;
+    /*background: #66ccff;*/
     height: 1em;
     transition: all 0.2s;
   }
   .tips {
     /*position: absolute;*/
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+  }
+  .timeNow {
+    color: #66ccff;
+    font-weight: bold;
+    font-size: 30px;
+  }
+  button {
+    margin-top: 10px;
+  }
+  .el-input {
+    width: 100px;
+    margin-top: 10px;
   }
 </style>
