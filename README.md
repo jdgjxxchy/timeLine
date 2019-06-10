@@ -40,13 +40,13 @@
 语音提前,指在倒计时条结束前多久播放语音
 
 
-## 辅助插件
+##  辅助插件
 因为要在网页和游戏之间切换,因此需要一些辅助插件.\
 1.chrome自带插件Seperate Window\
-下载地址:https://chrome.google.com/webstore/detail/cbgkkbaghihhnaeabfcmmglhnfkfnpon\
+下载地址:https://chrome.google.com/webstore/detail/cbgkkbaghihhnaeabfcmmglhnfkfnpon \
 用这个插件可以将倒计时独立出来 拖动成为一个小窗口\
 2.windows on top\
-下载地址:https://download.cnet.com/Window-On-Top/3000-2072_4-75586848.html
+下载地址:https://download.cnet.com/Window-On-Top/3000-2072_4-75586848.html \
 用这个插件可以将倒计时窗口置顶.
 
 
